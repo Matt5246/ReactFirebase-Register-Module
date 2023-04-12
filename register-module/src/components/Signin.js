@@ -70,7 +70,7 @@ export default function Signin (props) {
           </Form>
         </Card.Body>
         <div className='w-100 text-center'>
-          Need an account? <Link to="/signup-page">Sign Up</Link>
+          Need an account? <Link to="/signup">Sign Up</Link>
         </div>
         <div className='w-100 text-center'>
             <Link to="/forgot-password">Forgot Password?</Link>

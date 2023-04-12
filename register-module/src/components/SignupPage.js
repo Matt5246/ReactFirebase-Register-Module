@@ -28,7 +28,7 @@ export default function SignupPage() {
             phone: signupData.phone,
             role: signupData.role
           };
-          await setDoc(doc(db, "users", currentUser?.uid), { data });
+          await setDoc(docRef, data);
           console.log("No such document!", data);
         }
         navigate('/');
@@ -68,7 +68,6 @@ export default function SignupPage() {
         setLoading(false);
   }
   async function handleSubmit(formData) {
-    
     console.log('submitformData: ',formData);
       setSignupData(formData);
       setShowSummary(true);

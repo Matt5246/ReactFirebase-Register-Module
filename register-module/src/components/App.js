@@ -11,11 +11,13 @@ import UpdateProfile from "./UpdateProfile.js";
 import SignupSummary from "./SignupSummary.js";
 import '../App.css'
 import SignupPage from "./SignupPage.js";
+import spaceBackground from '../assets/space.jpg';
 
 const backgroundImage = { 
-  space: 'https://img.freepik.com/free-vector/watercolor-galaxy-background_79603-2384.jpg?w=1800&t=st=1681209009~exp=1681209609~hmac=4a34b2c15c814b2bb71454d6b3923a47246cf2eff398f3e94dfaad525190bd87',
+  space: spaceBackground,
   lines: 'https://img.freepik.com/free-vector/gradient-dynamic-purple-lines-background_23-2148995757.jpg?w=1800&t=st=1681151560~exp=1681152160~hmac=2c2184f7d8f71c3918d910fcb6d2c65d294416b96b5dba71a03a2ce4a755d050',
 }
+
 const lightTheme = {
   text: "#000000",
 };
@@ -50,8 +52,7 @@ function App() {
                 <Route path="/" element={<Dashboard textColor={theme.text}/>} />
                </Route>
               <Route path="/signup-summary" element={<SignupSummary textColor={theme.text}/>} />
-              <Route path="/signup" element={<Signup textColor={theme.text}/>} />
-              <Route path="/signup-page" element={<SignupPage textColor={theme.text}/>} />
+              <Route path="/signup" element={<SignupPage textColor={theme.text}/>} />
               <Route path="/signin" element={<Signin textColor={theme.text} />} />        
               <Route path="/forgot-password" element={<ForgotPassword textColor={theme.text}/>} />    
             </Routes>
