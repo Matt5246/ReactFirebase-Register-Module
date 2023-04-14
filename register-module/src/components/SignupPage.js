@@ -21,7 +21,7 @@ export default function SignupPage() {
         const docRef = doc(db, "users", currentUser?.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setTaskData(docSnap.data());
+          navigate('/signin');
         } else {
           const data = {
             nip: signupData.nip,
@@ -29,7 +29,6 @@ export default function SignupPage() {
             role: signupData.role
           };
           await setDoc(docRef, data);
-          console.log("No such document!", data);
         }
         navigate('/');
       } catch (e) {
@@ -52,13 +51,10 @@ export default function SignupPage() {
         try{
           setError('');
           setLoading(true);
-          await signup(formData.email, formData.password);
-            
           await new Promise((resolve) => {
             signup(formData.email, formData.password);
             resolve();
           });
-          console.log('user: ',currentUser?.uid);
           
         } catch(e) {
           console.log('signup, problem:',e);
@@ -68,7 +64,6 @@ export default function SignupPage() {
         setLoading(false);
   }
   async function handleSubmit(formData) {
-    console.log('submitformData: ',formData);
       setSignupData(formData);
       setShowSummary(true);
       await new Promise((resolve) => {

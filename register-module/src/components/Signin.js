@@ -11,7 +11,7 @@ export default function Signin (props) {
   const [error, setError] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const {textColor} = props;
+  
   
   async function handleSubmit (e) {
     e.preventDefault();
@@ -20,7 +20,6 @@ export default function Signin (props) {
       
       setError('');
       setLoading(true);
-      console.log('credentials: ',emailRef.current?.value, passwordRef.current?.value);
       await signin(emailRef.current?.value, passwordRef.current?.value);
         navigate('/');
     } catch(e) {
@@ -49,7 +48,6 @@ export default function Signin (props) {
       <Card className="card-style">
         <Card.Body>
           <h2 className="text-center mb-4">Sign In</h2>
-                  
           {error && <Alert variant="danger" className="alert alert-danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
@@ -60,20 +58,20 @@ export default function Signin (props) {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required placeholder="Enter your password"/>
             </Form.Group>
-            <Button style={{color: textColor}} disabled={loading} className="w-100 mt-3" type="submit">
+            <Button disabled={loading} className="w-100 mt-3 button-text" type="submit">
               Sign in
             </Button>
-            <Button style={{color: textColor}} onClick={handleGoogleSignin} className='w-100 mt-3'>
+            <Button onClick={handleGoogleSignin} className="w-100 mt-3 button-text">
             <BsGoogle className='mb-1'/>  
             {" Sign In With Google"}
             </Button> 
           </Form>
         </Card.Body>
         <div className='w-100 text-center'>
-          Need an account? <Link to="/signup">Sign Up</Link>
+          Need an account? <Link className="link-style" to="/signup">Sign Up</Link>
         </div>
         <div className='w-100 text-center'>
-            <Link to="/forgot-password">Forgot Password?</Link>
+            <Link className="link-style" to="/forgot-password">Forgot Password?</Link>
         </div>
         
         

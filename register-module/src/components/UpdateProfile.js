@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { Form, Card, Button, Alert, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-
-const prefixOptions = ["+1", "+44","+48", "+49", "+81", "+86", "+91", "+971"];
+import PasswordStrength from './PasswordStrength';
+import { prefixOptions, passwordRegex } from '../config/options';
 
 export default function UpdateProfile() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
   const passwordConfirmRef = React.useRef(null);
+  const [password, setPassword] = React.useState('');
   const nipRef = React.useRef(null);
   const phoneRef = React.useRef(null);
   const roleRef = React.useRef(null);
@@ -19,42 +19,38 @@ export default function UpdateProfile() {
   const [error, setError] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const [prefix, setPrefix] = useState("+48");
+  const [prefix, setPrefix] = React.useState("+48");
 
       
-
-    async function fetchData() {
-      try {
-        const docRef = doc(db, "users", currentUser?.uid);
-        const docSnap = await getDoc(docRef);
-        console.log("fetching data");
-        const dataToUpdate = {};
-        if (nipRef?.current?.value) {
-          dataToUpdate.nip = nipRef?.current?.value;
-        }
-        if (phoneRef?.current?.value) {
-          dataToUpdate.phone = phoneRef?.current?.value;
-        }
-        if (roleRef?.current?.value) {
-          dataToUpdate.role = roleRef?.current?.value;
-        }
-
-        if (docSnap.exists()) {
-          await updateDoc(docRef, dataToUpdate);
-        } else {
-          await setDoc(docRef, dataToUpdate);
-        }
-        navigate('/');
-      } catch (e) {
-        console.log(e);
+  async function fetchData() {
+    try {
+      const docRef = doc(db, "users", currentUser?.uid);
+      const docSnap = await getDoc(docRef);
+      
+      const dataToUpdate = {};
+      if (nipRef?.current?.value) {
+        dataToUpdate.nip = nipRef?.current?.value;
       }
-      setLoading(false);
+      if (phoneRef?.current?.value) {
+        dataToUpdate.phone = prefix+phoneRef?.current?.value;
+      }
+      if (roleRef?.current?.value) {
+        dataToUpdate.role = roleRef?.current?.value;
+      }
+
+      if (docSnap.exists()) {
+        await updateDoc(docRef, dataToUpdate);
+      } else {
+        await setDoc(docRef, dataToUpdate);
+      }
+      navigate('/');
+    } catch (e) {
+      console.log(e);
     }
+    setLoading(false);
+  }
     
-    const handlePrefixSelect = (selectedPrefix) => {
-      setPrefix(selectedPrefix);
-    };
-    function handleSubmit (e) {
+  function handleSubmit (e) {
     e.preventDefault();
     setError('');
     
@@ -62,8 +58,11 @@ export default function UpdateProfile() {
       if (passwordRef?.current.value !== passwordConfirmRef?.current.value) {
         return setError('Passwords do not match!');
       }
-      if (passwordRef?.current.value && passwordRef?.current.value.length < 7) {
-        return setError('Password should be at least 7 characters long!');
+      if (passwordRef?.current.value && passwordRef?.current.value.length < 8) {
+        return setError('Password should be at least 8 characters long!');
+      }
+      if (!passwordRegex.test(passwordRef?.current.value)) {
+        return setError('Password should contain at least one lowercase letter, one uppercase letter, one number, one special character!');
       }
     }
     if (nipRef?.current.value && nipRef?.current.value.length !== 10) {
@@ -72,6 +71,7 @@ export default function UpdateProfile() {
     if (phoneRef?.current.value && phoneRef?.current.value.length !== 9) {
       return setError('Phone number should be 9 characters long! only numbers');
     }
+
     const promises = [];
     setLoading(true);
     if (emailRef.current && currentUser.email !== emailRef.current.value) {
@@ -91,7 +91,7 @@ export default function UpdateProfile() {
         setLoading(false);
     });
   }
-  console.log(currentUser.uid);
+
   return (
     <>
       <Card className="card-style">
@@ -107,8 +107,9 @@ export default function UpdateProfile() {
             </Form.Group>
             <Form.Group id="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} 
+              <Form.Control type="password" ref={passwordRef} onChange={e=> setPassword(e.target.value)}
               placeholder="Leave blank to keep the same"/>
+              {password !== "" ?<PasswordStrength password={password}/> : null}
             </Form.Group>
             <Form.Group id="password-confirm">
                 <Form.Label>Password Confirmation</Form.Label>
@@ -129,7 +130,7 @@ export default function UpdateProfile() {
                 id="prefix-dropdown"
               >
                 {prefixOptions.map((option) => (
-                  <Dropdown.Item key={option} onClick={() => handlePrefixSelect(option)}>
+                  <Dropdown.Item key={option} onClick={() => setPrefix(option)}>
                     {option}
                   </Dropdown.Item>
                 ))}
@@ -155,15 +156,13 @@ export default function UpdateProfile() {
               <option value="Pełnomocnik">Pełnomocnik</option>
             </Form.Control>
           </Form.Group>
-            <Button disabled={loading} className="w-100 mt-3" type="submit">
+            <Button disabled={loading} className="w-100 mt-3 button-text" type="submit">
               Update
             </Button>
           </Form>
         </Card.Body>
-
         <div className='w-100 text-center'>
-          <Link to="/">Cancel</Link>
-
+          <Link className="link-style" to="/">Cancel</Link>
         </div>
       </Card>
     </>

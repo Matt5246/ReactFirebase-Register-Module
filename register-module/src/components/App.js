@@ -1,5 +1,4 @@
 import React from "react";
-import Signup from "./Signup.js";
 import {Container} from "react-bootstrap";
 import {AuthProvider} from "../contexts/AuthContext";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
@@ -9,36 +8,37 @@ import PrivateRoutes from "./privateRoutes.js";
 import ForgotPassword from "./ForgotPassword.js";
 import UpdateProfile from "./UpdateProfile.js";
 import SignupSummary from "./SignupSummary.js";
-import '../App.css'
 import SignupPage from "./SignupPage.js";
-import spaceBackground from '../assets/space.jpg';
+import {AiFillPicture} from "react-icons/ai";
+import { backgroundImage, darkTheme, lightTheme } from "../config/options.js";
 
-const backgroundImage = { 
-  space: spaceBackground,
-  lines: 'https://img.freepik.com/free-vector/gradient-dynamic-purple-lines-background_23-2148995757.jpg?w=1800&t=st=1681151560~exp=1681152160~hmac=2c2184f7d8f71c3918d910fcb6d2c65d294416b96b5dba71a03a2ce4a755d050',
-}
 
-const lightTheme = {
-  text: "#000000",
-};
-
-const darkTheme = {
-  text: "#ffffff",
-};
 function App() {
-  const selectedBackgroundImage = backgroundImage.space;
+  const [selectedBackgroundImage, setSelectedBackgroundImage] = React.useState(backgroundImage.space); // [state, setState
   const [theme, setTheme] = React.useState(darkTheme);
 
+  const toggleBackground = () => {
+    const newBackgroundImage = selectedBackgroundImage === backgroundImage.space 
+      ? backgroundImage.lines 
+      : backgroundImage.space;
+    setSelectedBackgroundImage(newBackgroundImage);
+  };
+
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--text-color', theme.text);
+  }, [theme]);
+  
   const toggleTheme = () => {
     setTheme(theme === lightTheme ? darkTheme : lightTheme);
   };
+
   return (
     <div style={{backgroundImage:` url(${selectedBackgroundImage})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     minHeight: "100vh",
     height: "100%",
-    color: theme.text,
+    color: theme.text,   
     }}>
     
       <Container className="d-flex align-items-center justify-content-center"
@@ -60,6 +60,18 @@ function App() {
         </AuthProvider>          
         </div>
       </Container>
+      <button 
+      style={{
+        position: "fixed",
+        bottom: "16px",
+        right: "45px",
+        border: "none",
+        outline: "none",
+        background: "none",
+        color: "white",
+      }}
+      onClick={toggleBackground}
+      ><AiFillPicture/></button>
       <button
         style={{
           position: "fixed",

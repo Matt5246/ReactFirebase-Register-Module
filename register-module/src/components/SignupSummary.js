@@ -12,13 +12,13 @@ export default function SignupSummary({data, show, handleClose, handleConfirm, e
         <Card.Body>
             <Form onSubmit={handleSubmit}>
             <h2 className="text-center mb-4">Registration Summary</h2>
-            <p><strong>Email:</strong> {email}</p>
-            <p><strong>NIP:</strong> {nip}</p>
-            <p><strong>Phone:</strong> {phone}</p>
-            <p><strong>Role:</strong> {role}</p>
+            {email && <p><strong>Email: </strong> {email}</p>}
+            {nip && <p><strong>NIP: </strong> {nip}</p>}
+            {phone && <p><strong>Phone: </strong> {phone}</p>}
+            {role && <p><strong>Role: </strong> {role}</p>}
             {error && <p className="text-danger">{error}</p>}
-            <Button variant="secondary" onClick={handleClose}>Edit</Button>
-            <Button variant="primary" type='submit'>Confirm</Button>
+            <Button className="w-100 mt-3 button-text" variant="secondary" onClick={handleClose}>Edit</Button>
+            <Button className="w-100 mt-3 button-text" variant="primary" type='submit'>Confirm</Button>
             </Form>
         </Card.Body>
     </Card>

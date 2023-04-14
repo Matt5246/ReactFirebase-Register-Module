@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Background pictures from https://www.freepik.com
+
+Please note that for authorized accounts from Google, it is not possible to change the password.
+
 ## Available Scripts
 
 In the project directory, you can run:
